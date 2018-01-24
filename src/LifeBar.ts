@@ -1,10 +1,10 @@
 import {Graphics} from "pixi.js";
 import {CONFIG} from "./Config";
 
-export class BasicItem {
+export class LifeBar {
     private shape:Graphics = new Graphics();
     private size:number;
-    private color:number = 0x000000;
+    private color:number;
 
     constructor() {
         this.size = CONFIG.SIZE;

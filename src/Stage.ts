@@ -36,7 +36,7 @@ export class Stage {
         for (let x = 0; x < window.innerWidth/CONFIG.SIZE; x++) {
             this.beings[x] = [];
             for(let y = 0; y < window.innerHeight/CONFIG.SIZE; y++) {
-                let being: Being = new Being();
+                let being:Being = new Being();
                 being.setPosition(x * CONFIG.SIZE, y * CONFIG.SIZE);
                 this.add(being);
                 this.beings[x] = this.beings[x] || [];
@@ -49,7 +49,7 @@ export class Stage {
         this.app.renderer.view.style.position = "absolute";
         this.app.renderer.view.style.display = "block";
         this.app.renderer.autoResize = true;
-        this.app.renderer.backgroundColor = CONFIG.NEUTRAL_COLOR;
+        this.app.renderer.backgroundColor = CONFIG.BACKGROUND_COLOR;
         this.app.renderer.resize(window.innerWidth, window.innerHeight);
     }
 

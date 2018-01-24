@@ -1,33 +1,36 @@
-import {BasicItem} from "./BasicItem";
+import {LifeBar} from "./LifeBar";
 import {GroupItem} from "./GroupItem";
 import {Utils} from "./Utils";
 import {CONFIG} from "./Config";
 
 export class Being extends GroupItem {
-    private _life:BasicItem = new BasicItem();
+    private _life:LifeBar = new LifeBar();
+    private _teamNum:number;
     private _health:number = CONFIG.STARTING_HEALTH;
-    private _isGood:boolean;
 
     constructor() {
         super();
 
-        this.setTeam(Utils.getRandomBetween(0, 1) === 0);
+        if(CONFIG.NUM_TEAMS < 2) {
+            throw "stop it.";
+        }
+
+        this.setTeam(Utils.getRandomBetween(0, CONFIG.NUM_TEAMS-1));
 
         this.add(this._life);
     }
 
-    public setTeam(isGood:boolean):void {
-        this._isGood = isGood;
-        this._life.setColor(this.getTeam() ? CONFIG.GOOD_COLOR : CONFIG.BAD_COLOR);
+    public setTeam(teamNum:number):void {
+        this._teamNum = teamNum;
+        this._life.setColor(Utils.getTeamColor(this.getTeam()));
     }
 
-    public getTeam():boolean {
-        return this._isGood;
+    public getTeam():number {
+        return this._teamNum;
     }
 
     private setHealth(health:number):void {
         if(health <= CONFIG.MIN_HEALTH) {
-            this.setTeam(!this.getTeam());
             health = CONFIG.MAX_HEALTH;
         }
         else if(health > CONFIG.MAX_HEALTH) {
@@ -47,7 +50,7 @@ export class Being extends GroupItem {
         // the winner of a fight is whoever has the most health.
         // if both combatants have the same health, a loser is picked at random.
         // combatants lose a random amount of health, up to the loser's health.
-        // when a combatant dies, it becomes the other type at full health.
+        // when a combatant dies, it becomes the victor's type at full health.
 
         if(enemy.getTeam() === this.getTeam()) {
             this.heal();
@@ -72,8 +75,17 @@ export class Being extends GroupItem {
 
         damage = Utils.getRandomBetween(1, loser.getHealth());
 
-        enemy.setHealth(enemyHealth - damage);
-        this.setHealth(myHealth - damage);
+        enemyHealth -= damage;
+        myHealth -= damage;
+
+        if(enemyHealth <= 0) {
+            enemy.setTeam(this.getTeam());
+        } else if(myHealth <= 0) {
+            this.setTeam(enemy.getTeam());
+        }
+
+        enemy.setHealth(enemyHealth);
+        this.setHealth(myHealth);
     }
 
     public heal():void {

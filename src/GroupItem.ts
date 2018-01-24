@@ -1,9 +1,9 @@
 import {Container} from "pixi.js";
-import {BasicItem} from "./BasicItem";
+import {LifeBar} from "./LifeBar";
 
 export class GroupItem {
     private container:Container = new Container();
-    private items:(BasicItem|GroupItem)[] = [];
+    private items:(LifeBar|GroupItem)[] = [];
 
     protected x:number;
     protected y:number;
@@ -12,7 +12,7 @@ export class GroupItem {
         return this.container;
     }
 
-    public add(element:GroupItem|BasicItem):void {
+    public add(element:GroupItem|LifeBar):void {
         this.items.push(element);
         this.getContainer().addChild(element.getContainer());
     }
@@ -28,7 +28,7 @@ export class GroupItem {
         this.getContainer().x = this.x;
         this.getContainer().y = this.y;
 
-        this.items.forEach((item:BasicItem|GroupItem) => {
+        this.items.forEach((item:LifeBar|GroupItem) => {
             item.render();
         });
 
