@@ -1,9 +1,14 @@
 import {Graphics} from "pixi.js";
+import {CONFIG} from "./Config";
 
 export class BasicItem {
     private shape:Graphics = new Graphics();
-    protected color:number = 0x000000;
-    protected size:number = 10;
+    private size:number;
+    private color:number = 0x000000;
+
+    constructor() {
+        this.size = CONFIG.SIZE;
+    }
 
     public render():void {
         this.shape.clear();
@@ -15,5 +20,9 @@ export class BasicItem {
 
     public getContainer():Graphics {
         return this.shape;
+    }
+
+    public setColor(color:number):void {
+        this.color = color;
     }
 }

@@ -1,57 +1,45 @@
-const autoprefixer = require('autoprefixer');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const html = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const path = require('path');
+const autoprefixer = require("autoprefixer");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const html = require("html-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const path = require("path");
+const webpack = require("webpack");
+
 const loaders = {
     ts: {
-        loader: 'ts-loader'
+        loader: "ts-loader"
     },
     css: {
-        loader: 'css-loader'
-    },
-    assets: {
-        loader: 'url-loader'
+        loader: "css-loader"
     },
     postcss: {
-        loader: 'postcss-loader',
+        loader: "postcss-loader",
         options: {
             plugins: (loader) => [
                 autoprefixer({
                     browsers: [
-                        'last 2 versions'
+                        "last 2 versions"
                     ]
                 })
             ]
         }
     },
     scss: {
-        loader: 'sass-loader',
+        loader: "sass-loader",
             options: {
             includePaths: [
-                path.resolve(__dirname, './src')
+                path.resolve(__dirname, "./src")
             ]
         }
     }
 };
 
 const config = {
-    context: __dirname + '/src',
     entry: {
-        fetch: [
-            'whatwg-fetch'
-        ],
-        app: [
-            __dirname + '/src/index.ts'
-        ]
+        app: "./src/index.ts"
     },
     module: {
         rules: [{
-            test: /.*devicon\.(css|eot|svg|ttf|woff)/,
-            use:[
-                loaders.assets
-            ]
-        }, {
             test: /\.ts$/,
             exclude: /node_modules/,
             use: [
@@ -61,43 +49,45 @@ const config = {
             test: /\.scss$/,
             exclude: /node_modules/,
             use: ExtractTextPlugin.extract({
-                fallback: 'style-loader',
+                fallback: "style-loader",
                 use: [
                     loaders.css,
                     loaders.postcss,
                     loaders.scss
                 ]
             })
-        }, {
-            test: /\.(png|jpg|gif)$/,
-            use: [
-                loaders.assets
-            ]
         }]
     },
     output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, "dist"),
+        path: path.join(__dirname, "dist"),
+        publicPath: "",
+        filename: "[name].js",
     },
     plugins: [
-        new CleanWebpackPlugin(['dist']),
-        new ExtractTextPlugin('[name].css'),
+        new CleanWebpackPlugin(["dist"]),
+        new ExtractTextPlugin("[name].css"),
         new html({
-            template : __dirname + '/src/index.html'
-        })
+            template : __dirname + "/src/index.html"
+        }),
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin()
     ],
-    devtool: 'inline-source-map',
+    devtool: "inline-source-map",
     resolve: {
         extensions: [
-            '.ts',
-            '.tsx',
-            '.js',
-            '.scss'
+            ".ts",
+            ".tsx",
+            ".js",
+            ".scss"
         ],
         modules: [
-            path.join(__dirname, './src'),
-            'node_modules'
+            path.join(__dirname, "./src"),
+            "node_modules"
         ]
+    },
+    devServer: {
+        contentBase: './dist',
+        hot: true
     }
 };
 
