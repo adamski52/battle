@@ -1,5 +1,5 @@
 export const CONFIG = {
-    NUM_TEAMS: 100,
+    NUM_TEAMS: 10,
     SIZE: 5,
     HEALING_FACTOR: 5,
     STARTING_HEALTH: 100,

@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+- '7'
+addons:
+  ssh_known_hosts: jonathanadamski.com
+install:
+- npm install
+before_script:
+- npm run test
+script:
+- npm run build
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_4570fd315ca5_key -iv $encrypted_4570fd315ca5_iv
+  -in ./scripts/deploy_rsa.enc -out /tmp/deploy_rsa -d
+- eval "$(ssh-agent -s)"
+- chmod 600 /tmp/deploy_rsa
+- ssh-add /tmp/deploy_rsa
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: npm run deploy
+  on:
+    branch: master
