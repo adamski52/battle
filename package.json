@@ -1,12 +1,13 @@
 {
-  "name": "playground",
+  "name": "battle",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Tests coming soon.\"",
     "start": "webpack-dev-server",
-    "build": "webpack"
+    "build": "webpack",
+    "deploy": "node scripts/deploy.js"
   },
   "author": "",
   "license": "ISC",
